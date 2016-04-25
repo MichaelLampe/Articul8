@@ -1,0 +1,163 @@
+#message_content{
+    margin: 4em auto;
+    padding: 10px;
+    text-align: justify;
+    max-width: 80%;
+}
+
+.bar {
+    padding-left: 0;
+}
+
+.list {
+    padding-left: 0;
+    width: 100%;
+}
+
+.item-select select {
+    max-width: 100%;
+}
+
+.item-input {
+    height: 100%;
+    width: 100%;
+}
+
+.button_container{
+    height: 80vh;
+    margin-left: 4vw;
+    margin-top: 10px;
+    width: 18vw;
+    float: left;
+}
+
+.button_container_last {
+    margin-right: 4vw;
+}
+
+#content {
+    margin-top: 10vh;
+    height: 80vh;
+    background: #161616;
+}
+
+.list{
+    width: 100vw;
+    text-align: center;
+    font-size: 24px;
+}
+
+.key{
+    height: 6vh;
+    width: 70%;
+    background-color: #FFF;
+    border: 3px solid #FFF;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    margin-left: 15%;
+    margin-right: 15%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.dead_key{
+    background-color: #ff7f7f !important;
+    border: 3px solid #4c0000 !important;
+}
+
+.button_text {
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+}
+
+.popup-buttons > button {
+    background: #e3f2fd;
+}
+
+.popup-container .popup{
+    background :  #11346e;
+}
+
+.popup-body input {
+    padding-left: 5px;
+}
+
+.popup-head h3 {
+    color: white;
+}
+
+.popup-head h5 {
+    color: white;
+}
+
+.hidden-button-container {
+    width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    opacity: 0;
+    transition: width 1s, opacity 0.5s;
+
+}
+
+.column-select-button {
+    width: 100%;
+    height: 10vh;
+    background: #11346e;
+    border-color: #11346e;
+    margin-bottom: 3vh;
+    color: white;
+}
+
+.hidden-word-labels {
+    opacity: 0;
+}
+
+.show-word-labels {
+    opacity: 1;
+    transition: opacity 0.15s;
+}
+
+#word_labels {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 70vw;
+    height: 71vh;
+    color: black;
+    z-index: -1;
+}
+
+.word-label {
+    font-size: 2em;
+    height: 5.9vh;
+    margin-top: 1.4vh;
+    margin-bottom: 2vh;
+    line-height: 6vh;
+    z-index: -1;
+}
+
+.button-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    background: purple;
+    height: 10%;
+    z-index: 1000;
+}
+
+.button-bar-buttons {
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: red;
+    color: white;
+    line-height: 100%;
+    text-align: center;
+    border-left-width: 0;
+    border-top-width: 2px;
+    border-top-color: white;
+}
+
+.scroll {
+    height:100%;
+}
