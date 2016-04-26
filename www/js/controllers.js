@@ -108,13 +108,13 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
       // Check if there is an update
       if (res.data.new_word) {
         // Change word to new word and save to local storage for later use.
-        BUTTONS.words[res.data.current_button_index] = res.data.new_word;
+        Button.words[res.data.current_button_index] = res.data.new_word;
 
         // Update button value
-        res.data.current_button.setAttribute('value', BUTTONS.words[res.data.current_button_index]);
-        BUTTONS.saveWordsToLocalStorage(BUTTONS.words);
-        if (!BUTTONS.showingAllColumns) {
-          BUTTONS.updateWordLabels(BUTTONS.current_k);
+        res.data.current_button.setAttribute('value', Button.words[res.data.current_button_index]);
+        Button.saveWordsToLocalStorage(Button.words);
+        if (!Button.showingAllColumns) {
+          Button.updateWordLabels(Button.current_k);
         }
         sayString(res.data.new_word);
       } else {
