@@ -50,14 +50,11 @@
 .key{
     height: 6vh;
     width: 70%;
-    background-color: #FFF;
-    border: 3px solid #FFF;
     margin-top: 1vh;
     margin-bottom: 1vh;
     margin-left: 15%;
     margin-right: 15%;
     text-align: center;
-    border-radius: 10px;
 }
 
 .dead_key{

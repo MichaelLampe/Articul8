@@ -2,13 +2,15 @@ angular.module('articulate.services', [])
 
 .factory("Config", function(){
     return {
-        buttonColor:"#d9d9d9",
         defaultWords: [
             "want","ipad","help","love","colors","yes","no","bath",
             "school","read","hug","brush teeth", "ball","music","potty","up",
             "snack","sing","alphabet","walk","milk","mama","daddy","go",
             "car","numbers","more","blanket","stop", "", ""
         ],
+        buttonTypeWord: "button-stable",
+        buttonTypeColumn: "button-positive",
+        buttonOutline: "",
 
         saveSettings: function(){
             console.log("Saving config to local storage");
@@ -48,7 +50,15 @@ angular.module('articulate.services', [])
             this.populateWords();
             this.populateButtons($scope);
             this.populateWordLabels();
+            this.updateColumnButton();
             Config.saveSettings();
+        },
+
+        updateColumnButton : function(){
+            for (var i = 0; i < 4; i++){
+                column_button = document.getElementById("column_button_" + i);
+                column_button.setAttribute('class', 'button icon ion-ios-arrow-down ' + Config.buttonTypeColumn);
+            }
         },
 
         saveWordsToLocalStorage: function(words) {
@@ -78,11 +88,10 @@ angular.module('articulate.services', [])
             for (var i = 0; i < 31; i++){
                 // Create a given button
                 var button = document.createElement('button');
-                button.setAttribute('class', 'key');
+                button.setAttribute('class', 'key button ' + Config.buttonTypeWord + ' ' + Config.buttonOutline);
                 button.setAttribute('id', 'button_' + i.toString());
                 button.setAttribute('value', this.words[i]);
                 button.setAttribute('ng-click', "showPopup($event)");
-                button.style.background = Config.buttonColor;
 
                 // Recompile so ng-click update registers.
                 $compile(button) ($scope);
