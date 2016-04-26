@@ -48,7 +48,6 @@ angular.module('articulate.services', [])
         },
 
         getSettingFromLocalStorage: function(settingName){
-            console.log("Retrieving " + settingName)
             return window.localStorage[settingName];
         }
     }
