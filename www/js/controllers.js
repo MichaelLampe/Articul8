@@ -8,16 +8,15 @@ sayString = function(word) {
   if (true) {
     if (window.TTS != undefined) {
       console.log("trying to say " + word);
-      console.log(window.TTS);
       window.TTS
       .speak({
         text: word,
         locale: 'en-US',
         rate: 1.25
       }, function () {
-        alert('success');
+        console.log('TTS success.');
       }, function (reason) {
-        alert(reason);
+        console.log('TTS fail.');
       });
     } else {
       console.log("Unable to find Text to speech plugin");
@@ -131,7 +130,6 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
   BLE.connect($stateParams.deviceId).then(
     function(peripheral) {
       BLE.subscribe($stateParams.deviceId, function(data){
-        console.log("it returned " + data);
         sayString(Button.words[data]);
       });
       //$scope.device = peripheral;
