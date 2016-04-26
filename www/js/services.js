@@ -76,7 +76,6 @@ angular.module('articulate.services', [])
             console.log("ERROR: " + reason);
           }
         );
-        return deferred.promise;
       }
     };
   });
