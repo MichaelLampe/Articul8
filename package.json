@@ -27,5 +27,8 @@
       "id": "cordova-plugin-whitelist"
     }
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "ios",
+    "android"
+  ]
 }

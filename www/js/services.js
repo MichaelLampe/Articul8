@@ -58,6 +58,21 @@ angular.module('articulate.services', [])
         );
 
         return deferred.promise;
+    },
+    subscribe: function(deviceId) {
+        var deferred = $q.defer();
+
+        ble.connect(deviceId,
+            function(peripheral) {
+                connected = peripheral;
+                deferred.resolve(peripheral);
+            },
+            function(reason) {
+                deferred.reject(reason);
+            }
+        );
+
+        return deferred.promise;
     }
   };
 });
