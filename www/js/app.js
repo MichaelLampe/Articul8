@@ -33,7 +33,7 @@ angular.module('articulate', ['ionic', 'articulate.controllers', 'articulate.ser
               }
           );
       } catch(error){
-          console.log("error");
+          console.log("Error loading Bluetooth module.");
       }
 
   });
@@ -85,7 +85,6 @@ angular.module('articulate', ['ionic', 'articulate.controllers', 'articulate.ser
                 }
             }
         })
-
 
         .state('tab.settings', {
             url: '/settings',
