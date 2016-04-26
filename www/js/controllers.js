@@ -53,7 +53,7 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
         Config.saveSettingToLocalStorage(config_name, button_style);
 
         // Reload button styles
-        
+
     };
 })
 
@@ -140,9 +140,9 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 
         // Update button value
         res.data.current_button.setAttribute('value', Button.words[res.data.current_button_index]);
-          Button.saveWordsToLocalStorage(Button.words);
+        Button.saveWordsToLocalStorage(Button.words);
         if (!Button.showingAllColumns) {
-            Button.updateWordLabels(Button.current_k);
+          Button.updateWordLabels(Button.current_k);
         }
         sayString(res.data.new_word);
       } else {
