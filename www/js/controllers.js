@@ -26,8 +26,35 @@ sayString = function(word) {
 
 
 
-angular.module('articulate.controllers', []).controller('SettingsCtrl', function($scope) {
-  console.log("Loaded settings controller");
+angular.module('articulate.controllers', []).controller('SettingsCtrl', function($scope, Config) {
+    button_types = ["button-light",
+                    "button-stable",
+                    "button-positive",
+                    "button-calm",
+                    "button-balanced",
+                    "button-energized",
+                    "button-assertive",
+                    "button-royal",
+                    "button-dark"];
+    settings_list = [["Word Button Style", "wordButtons"], ["Column Button Style", "columnButtons"]];
+
+    $scope.settings = [];
+    for (var i = 0; i < settings_list.length; i++){
+        setting_object = {
+            "human_name" : settings_list[i][0],
+            "machine_name": settings_list[i][1],
+            "button_types": button_types
+        };
+        $scope.settings.push(setting_object);
+    }
+
+    $scope.changeButtonStyle = function(config_name, button_style) {
+        // Save to local storage
+        Config.saveSettingToLocalStorage(config_name, button_style);
+
+        // Reload button styles
+        
+    };
 })
 
 .controller('BLECtrl', function($scope, BLE) {
@@ -75,7 +102,9 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
   // Setup
   Button.setup($scope);
 
-  // Handler for collapsing columns
+  /*
+  Handler for collapsing columns
+   */
   displayWordsColumn = function(column_to_keep){
     Button.showWordColumn(column_to_keep);
   };
@@ -84,7 +113,6 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
   $scope.showPopup = function ($event) {
     // Keep scope
     $scope.data = {};
-
     // Log these for later use when we reassign word in word array
     $scope.data.current_button_index = $event.currentTarget.id.replace("button_", "");
     $scope.data.current_button = $event.currentTarget;
@@ -108,13 +136,13 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
       // Check if there is an update
       if (res.data.new_word) {
         // Change word to new word and save to local storage for later use.
-        BUTTONS.words[res.data.current_button_index] = res.data.new_word;
+        Button.words[res.data.current_button_index] = res.data.new_word;
 
         // Update button value
-        res.data.current_button.setAttribute('value', BUTTONS.words[res.data.current_button_index]);
-        BUTTONS.saveWordsToLocalStorage(BUTTONS.words);
-        if (!BUTTONS.showingAllColumns) {
-          BUTTONS.updateWordLabels(BUTTONS.current_k);
+        res.data.current_button.setAttribute('value', Button.words[res.data.current_button_index]);
+          Button.saveWordsToLocalStorage(Button.words);
+        if (!Button.showingAllColumns) {
+            Button.updateWordLabels(Button.current_k);
         }
         sayString(res.data.new_word);
       } else {

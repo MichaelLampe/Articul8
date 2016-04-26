@@ -2,23 +2,33 @@ angular.module('articulate.services', [])
 
 .factory("Config", function(){
     return {
-        defaultWords: [
-            "want","ipad","help","love","colors","yes","no","bath",
-            "school","read","hug","brush teeth", "ball","music","potty","up",
-            "snack","sing","alphabet","walk","milk","mama","daddy","go",
-            "car","numbers","more","blanket","stop", "", ""
-        ],
-        buttonTypeWord: "button-stable",
-        buttonTypeColumn: "button-positive",
-        buttonOutline: "",
+        wordButtons: "button-stable",
+        columnButtons: "button-positive",
+        buttonWithOutline: "",
+
+        convertCamelCaseToPlainText: function(input_string) {
+            var result = input_string.replace( /([A-Z])/g, " $1" );
+            var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+            return finalResult;
+        },
 
         saveSettings: function(){
             console.log("Saving config to local storage");
+            settings = this.getAllSettings(false);
+            for (var i in settings.length) {
+                this.saveSettingToLocalStorage(settings[i], this[settings[i]]);
+            }
+        },
+
+        getAllSettings: function(camelCase){
+            return_list = [];
             for (var propertyName in this){
                 if (typeof this[propertyName] != 'function') {
-                    this.saveSettingToLocalStorage(propertyName, this[propertyName]);
+                    result = camelCase ? [this.convertCamelCaseToPlainText(propertyName), propertyName] : propertyName;
+                    return_list.push(result);
                 }
             }
+            return return_list;
         },
 
         loadSettings: function(){
@@ -57,7 +67,7 @@ angular.module('articulate.services', [])
         updateColumnButton : function(){
             for (var i = 0; i < 4; i++){
                 column_button = document.getElementById("column_button_" + i);
-                column_button.setAttribute('class', 'button icon ion-ios-arrow-down ' + Config.buttonTypeColumn);
+                column_button.setAttribute('class', 'left-margin button icon ion-chevron-left ' + Config.columnButtons);
             }
         },
 
@@ -70,7 +80,16 @@ angular.module('articulate.services', [])
             console.log("Populating words into list.");
             if(window.localStorage['words'] === undefined){
                 console.log("Loading default word list");
-                this.saveWordsToLocalStorage(Config.defaultWords);
+
+                var defaultWords = [
+                    "want","ipad","help","love","colors","yes","no","bath",
+                    "school","read","hug","brush teeth", "ball","music","potty","up",
+                    "snack","sing","alphabet","walk","milk","mama","daddy","go",
+                    "car","numbers","more","blanket","stop", "", ""
+                ];
+
+
+                this.saveWordsToLocalStorage(defaultWords);
             }
             this.words = window.localStorage['words'].split(",");
         },
@@ -88,7 +107,7 @@ angular.module('articulate.services', [])
             for (var i = 0; i < 31; i++){
                 // Create a given button
                 var button = document.createElement('button');
-                button.setAttribute('class', 'key button ' + Config.buttonTypeWord + ' ' + Config.buttonOutline);
+                button.setAttribute('class', 'key button ' + Config.wordButtons + ' ' + Config.buttonWithOutline);
                 button.setAttribute('id', 'button_' + i.toString());
                 button.setAttribute('value', this.words[i]);
                 button.setAttribute('ng-click', "showPopup($event)");
@@ -181,6 +200,10 @@ angular.module('articulate.services', [])
                         this.buttonContainers[i].classList.remove("hidden-button-container");
                         setTimeoutContainer(this.buttonContainers[i]);
                     }
+                } else{
+                    id = "column_button_" + this.current_k;
+                    current_button = document.getElementById(id);
+                    this.showingAllColumns ? current_button.classList.add("rotated-button") : current_button.classList.remove("rotated-button");
                 }
             }
 
