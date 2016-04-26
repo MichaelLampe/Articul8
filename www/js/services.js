@@ -73,7 +73,7 @@ angular.module('articulate.services', [])
             var c3 = document.getElementById("mr_button_container");
             var c4 = document.getElementById("r_button_container");
 
-            buttonContainers = [c1, c2, c3, c4];
+            this.buttonContainers = [c1, c2, c3, c4];
 
             for (var i = 0; i < 31; i++){
                 // Create a given button
@@ -88,7 +88,7 @@ angular.module('articulate.services', [])
                 $compile(button) ($scope);
 
                 // Append to the correct div
-                buttonContainers[Math.floor(i / 8)].appendChild(button);
+                this.buttonContainers[Math.floor(i / 8)].appendChild(button);
             }
         },
 
@@ -142,14 +142,35 @@ angular.module('articulate.services', [])
             // Switch word labels to correct values
             this.updateWordLabels(k);
             for (i = 0; i < 4; i++) {
-
                 // Add or remove all but the column that signaled.
                 if (i !== k) {
                     if (this.showingAllColumns) {
-                        buttonContainers[i].classList.add("hidden-button-container");
-                    } else
-                    {
-                        buttonContainers[i].classList.remove("hidden-button-container");
+                        this.buttonContainers[i].classList.add("hidden-button-container");
+
+
+                        /*
+                         We have to do this because of JS scoping.
+                         */
+                        setTimeoutContainer = function(c){
+                            setTimeout(function(){
+                                c.classList.add("hidden-button-container-final");
+                            },600);
+                        };
+
+                        setTimeoutContainer(this.buttonContainers[i]);
+
+                    } else {
+                        /*
+                         Fuzz it a bit to make it look better.
+                         */
+                        setTimeoutContainer = function(c){
+                            setTimeout(function(){
+                                c.classList.remove("hidden-button-container-final");
+                            },150);
+                        };
+
+                        this.buttonContainers[i].classList.remove("hidden-button-container");
+                        setTimeoutContainer(this.buttonContainers[i]);
                     }
                 }
             }

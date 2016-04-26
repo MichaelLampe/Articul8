@@ -99,6 +99,10 @@
 
 }
 
+.hidden-button-container-final {
+    display:none;
+}
+
 .column-select-button {
     width: 100%;
     height: 10vh;
