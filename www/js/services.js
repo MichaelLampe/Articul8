@@ -44,6 +44,12 @@ angular.module('articulate.services', [])
 
         saveSettingToLocalStorage: function(settingName, value){
             window.localStorage[settingName] = value.toString();
+            this[settingName] = window.localStorage[settingName];
+        },
+
+        getSettingFromLocalStorage: function(settingName){
+            console.log("Retrieving " + settingName)
+            return window.localStorage[settingName];
         }
     }
 })
@@ -117,6 +123,14 @@ angular.module('articulate.services', [])
 
                 // Append to the correct div
                 this.buttonContainers[Math.floor(i / 8)].appendChild(button);
+            }
+        },
+
+        updateButtonClass: function() {
+            for (var i = 0; i < 31; i++){
+                // Update the class of the buttons to reflect user changes
+                var button = document.getElementById('button_' + i.toString());
+                button.setAttribute('class', 'key button ' + Config.wordButtons + ' ' + Config.buttonWithOutline);
             }
         },
 

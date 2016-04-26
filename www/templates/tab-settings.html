@@ -1,19 +1,27 @@
 <ion-view view-title="Settings">
-    <ion-content>
-        <ion-list>
-            <ion-item class="item-icon-right" ng-repeat="setting in settings" type="item-text-wrap"">
-                <h2>{{setting.human_name}}</h2>
-                <div class="settings-buttons">
-                    <ion-list>
-                        <ion-item class="button button-item" ng-repeat="button_name in setting.button_types">
-                            <button class="button {{button_name}} settings-button"
-                                    ng-click="changeButtonStyle(setting.machine_name, button_name)">
-                            </button>
-                        </ion-item>
-                    </ion-list>
-                </div>
-            </ion-item>
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-icon-right" ng-repeat="setting in settings" type="item-text-wrap">
+        <h2 class="button_settings_header">{{setting.human_name}}</h2>
+        <div class="settings-buttons">
+          <ion-list>
+            <ion-item class="button-item" ng-repeat="button_name in setting.button_types">
+              <button class="button {{button_name}} settings-button"
+              ng-click="changeButtonStyle(setting.machine_name, button_name)">
+            </button>
+          </ion-item>
         </ion-list>
-    </ion-content>
-</ion-view>
+      </div>
+    </ion-item>
+    <ion-item class="item-icon-right" ng-repeat="toggle in toggles" type="item-text-wrap">
+      <button
+      id="{{toggle.machine_name}}"
+      class="button {{toggle.button_class}} toggle_button"
+      ng-click="toggleValue(toggle.machine_name)">
+      {{toggle.name}}
+    </button>
+  </ion-item>
 
+</ion-list>
+</ion-content>
+</ion-view>

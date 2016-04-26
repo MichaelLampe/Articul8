@@ -26,35 +26,76 @@ sayString = function(word) {
 
 
 
-angular.module('articulate.controllers', []).controller('SettingsCtrl', function($scope, Config) {
-    button_types = ["button-light",
-                    "button-stable",
-                    "button-positive",
-                    "button-calm",
-                    "button-balanced",
-                    "button-energized",
-                    "button-assertive",
-                    "button-royal",
-                    "button-dark"];
-    settings_list = [["Word Button Style", "wordButtons"], ["Column Button Style", "columnButtons"]];
+angular.module('articulate.controllers', []).controller('SettingsCtrl', function($scope, Config, Button) {
+  button_types = ["button-light",
+  "button-stable",
+  "button-positive",
+  "button-calm",
+  "button-balanced",
+  "button-energized",
+  "button-assertive",
+  "button-royal",
+  "button-dark"];
 
-    $scope.settings = [];
-    for (var i = 0; i < settings_list.length; i++){
-        setting_object = {
-            "human_name" : settings_list[i][0],
-            "machine_name": settings_list[i][1],
-            "button_types": button_types
-        };
-        $scope.settings.push(setting_object);
+  toggle_buttons = [["Toggle Voice", "toggleVoice"]];
+
+  settings_list = [["Word Button Style", "wordButtons"], ["Column Button Style", "columnButtons"]];
+
+  $scope.settings = [];
+  for (var i = 0; i < settings_list.length; i++){
+    setting_object = {
+      "human_name" : settings_list[i][0],
+      "machine_name": settings_list[i][1],
+      "button_types": button_types
+    };
+    $scope.settings.push(setting_object);
+  }
+
+
+  $scope.toggles = [];
+  for(var i = 0; i < toggle_buttons.length; i++){
+    defaultvalue = Config.getSettingFromLocalStorage(toggle_buttons[i][1]);
+    if(defaultvalue === undefined){
+      Config.saveSettingToLocalStorage(toggle_buttons[i][1], true);
+      defaultvalue = true;
+    }
+    toggle_object = {
+      "name" : toggle_buttons[i][0],
+      "machine_name" : toggle_buttons[i][1],
+      "button_class" : defaultvalue == "true" ? "button-balanced" : "button-assertive"
+    }
+    $scope.toggles.push(toggle_object);
+  }
+
+  $scope.changeButtonStyle = function(config_name, button_style) {
+    // Save to local storage
+    Config.saveSettingToLocalStorage(config_name, button_style);
+
+    //Update the buttons to reflect the changes
+    Button.updateButtonClass();
+    Button.updateColumnButton();
+  };
+
+  $scope.toggleValue = function(button_name) {
+
+    //retrieve the previous default value
+    defaultvalue = Config.getSettingFromLocalStorage(button_name);
+
+    //connect with the button on the UI
+    button = document.getElementById(button_name);
+
+    //if it was true, set it to false and change the button color
+    if(defaultvalue === "true"){
+      Config.saveSettingToLocalStorage(button_name, false);
+      button.setAttribute("class", "button button-assertive toggle_button");
     }
 
-    $scope.changeButtonStyle = function(config_name, button_style) {
-        // Save to local storage
-        Config.saveSettingToLocalStorage(config_name, button_style);
-
-        // Reload button styles
-
-    };
+    //otherwise set it to true and change the button color
+    else{
+      Config.saveSettingToLocalStorage(button_name, true);
+      button.setAttribute("class", "button button-balanced toggle_button");
+    }
+  };
 })
 
 .controller('BLECtrl', function($scope, BLE) {
@@ -104,7 +145,7 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 
   /*
   Handler for collapsing columns
-   */
+  */
   displayWordsColumn = function(column_to_keep){
     Button.showWordColumn(column_to_keep);
   };
