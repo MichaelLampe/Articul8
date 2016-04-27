@@ -8,4 +8,5 @@ config.xml
 node_modules/
 platforms/
 plugins/
-resources/
+resources/ios/
+resources/android/
