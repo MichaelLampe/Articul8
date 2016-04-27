@@ -178,10 +178,6 @@
   font-weight: bold;
 }
 
-button[id^='column_button_']{
-  border-radius: 100%;
-}
-
 
 .scroll {
   height:100%;
