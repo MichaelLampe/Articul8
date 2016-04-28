@@ -1,0 +1,16 @@
+<ion-view view-title="Stats">
+  <ion-content>
+    <ion-list>
+      <div class="list">
+        <ion-item class="card list-inset" ng-repeat="word in words">
+          <div class="item range range-positive">
+            <h3>{{word.word}}</h3>
+            <input type="range" name={{word.word}} min="0" max={{word.max}} value={{word.count}} disabled>
+            <h3>{{word.count}}</h3>
+          </div>
+        </div>
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>
+</ion-view>

@@ -5,6 +5,7 @@ angular.module('articulate.services', [])
         wordButtons: "button-stable",
         columnButtons: "button-positive",
         buttonWithOutline: "",
+        currentWordCounts: {},
 
         convertCamelCaseToPlainText: function(input_string) {
             var result = input_string.replace( /([A-Z])/g, " $1" );
@@ -97,6 +98,15 @@ angular.module('articulate.services', [])
                 this.saveWordsToLocalStorage(defaultWords);
             }
             this.words = window.localStorage['words'].split(",");
+
+            if(window.localStorage['wordCounts'] === undefined){
+                console.log("Loading default word count");
+
+                var wordCounts = '{ "want": 0,"ipad": 0,"help": 0,"love": 0,"colors": 0,"yes": 0,"no": 0,"bath": 0,"school": 0,"read": 0,"hug": 0,"brush teeth": 0,"ball": 0,"music": 0,"potty": 0,"up": 0,"snack": 0,"sing": 0,"alphabet": 0,"walk": 0,"milk": 0,"mama": 0,"daddy": 0,"go": 0,"car": 0,"numbers": 0,"more": 0,"blanket": 0,"stop": 0}';
+                Config.saveSettingToLocalStorage("wordCounts", wordCounts);
+            }
+
+            Config.currentWordCounts = Config.getSettingFromLocalStorage("wordCounts");
         },
 
         // Populates the UI with buttons
@@ -226,6 +236,36 @@ angular.module('articulate.services', [])
 
     }
 })
+
+.factory('WordStats', function(Config) {
+
+  return {
+    getWords: function() {
+        var jsonString = Config.getSettingFromLocalStorage("wordCounts");
+        topWordsDictionary = JSON.parse(jsonString.toString());
+        Config.currentWordCounts = topWordsDictionary;
+        return topWordsDictionary;
+      },
+      incrementWord: function(word) {
+          var json = Config.currentWordCounts;
+          if(json === undefined){
+              jsonString = Config.getSettingFromLocalStorage("wordCounts");
+              json = JSON.parse(jsonString);
+          }
+
+          if(json[word] === undefined){
+            json[word] = 1;
+          }
+          else{
+            json[word] = json[word] + 1;
+          }
+
+          Config.saveSettingToLocalStorage("wordCounts", JSON.stringify(topWordsDictionary));
+          Config.currentWordCounts = topWordsDictionary;
+          console.log("Incremented " + word + " and saved.");
+        }
+    };
+  })
 
 .factory('BLE', function($q) {
   var connected;

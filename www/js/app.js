@@ -76,12 +76,25 @@ angular.module('articulate', ['ionic', 'articulate.controllers', 'articulate.ser
                 }
             }
         })
+
         .state('tab.ble-detail', {
             url: '/ble/:deviceId',
             views: {
                 'tab-ble': {
                     templateUrl: 'templates/ble-detail.html',
                     controller: 'BLEDetailCtrl'
+                }
+            }
+        })
+
+        .state('tab.wordStats', {
+            url: '/stats',
+            reload: true,
+            cached: false,
+            views: {
+                'tab-wordStats': {
+                    templateUrl: 'templates/tab-wordStats.html',
+                    controller: 'WordStatsCtrl',
                 }
             }
         })

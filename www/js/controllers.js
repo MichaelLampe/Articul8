@@ -4,7 +4,7 @@ var bluetoothActive = true;
 /*
 Helper Functions
 */
-sayString = function(word) {
+sayString = function(word, WordStats) {
   if (true) {
     if (window.TTS != undefined) {
       console.log("trying to say " + word);
@@ -21,6 +21,9 @@ sayString = function(word) {
     } else {
       console.log("Unable to find Text to speech plugin");
     }
+  }
+  if(WordStats != undefined){
+    WordStats.incrementWord(word);
   }
 };
 
@@ -138,7 +141,7 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 })
 
 
-.controller('DashCtrl',function($scope, $ionicPopup, Button, Config) {
+.controller('DashCtrl',function($scope, $ionicPopup, Button, Config, WordStats) {
   Config.loadSettings();
   // Setup
   Button.setup($scope);
@@ -185,7 +188,7 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
         if (!Button.showingAllColumns) {
           Button.updateWordLabels(Button.current_k);
         }
-        sayString(res.data.new_word);
+        sayString(res.data.new_word, WordStats);
       } else {
         // Log a cancellation.
         console.log("No word supplied.")
@@ -194,12 +197,48 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
   }
 })
 
-.controller('BLEDetailCtrl', function($scope, $stateParams, Button, BLE) {
+.controller('WordStatsCtrl', function($scope, BLE, WordStats) {
+
+  $scope.$on('$ionicView.enter', function() {
+    $scope.words = [];
+
+    wordsDict = WordStats.getWords();
+
+    // Create items array
+    var items = Object.keys(wordsDict).map(function(key) {
+        return [key, wordsDict[key]];
+    });
+
+    // Sort the array based on the second element
+    items.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+
+    // Create a new array with only the first 5 items
+    console.log(items.slice(0, 5));
+
+    var thetop = items.slice(0, 5);
+    var max = 10;
+    for(var i = 0; i < thetop.length; i++){
+      if(i === 0){
+        max = thetop[i][1];
+      }
+      var entry = {
+        "word" : thetop[i][0],
+        "count" : thetop[i][1],
+        "max" : max
+      }
+      $scope.words.push(entry);
+    }
+  });
+})
+
+.controller('BLEDetailCtrl', function($scope, $stateParams, Button, BLE, WordStats) {
 
   BLE.connect($stateParams.deviceId).then(
     function(peripheral) {
       BLE.subscribe($stateParams.deviceId, function(data){
-        sayString(Button.words[data]);
+        sayString(Button.words[data], WordStats);
       });
       //$scope.device = peripheral;
     }
