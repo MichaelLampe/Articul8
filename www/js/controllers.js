@@ -72,7 +72,10 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 
   $scope.changeButtonStyle = function(config_name, button_style) {
     // Save to local storage
+    console.log(config_name)
+    console.log(button_style)
     Config.saveSettingToLocalStorage(config_name, button_style);
+    Config.loadSettings();
   };
 
   $scope.toggleValue = function(button_name) {
@@ -140,6 +143,8 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 .controller('DashCtrl',function($scope, $ionicPopup, Button, Config, WordStats, Utility) {
 
   var populateList = function(str) {
+    console.log("called")
+    console.log(str)
     $scope.words = [];
 
     Button.setWords();
@@ -163,8 +168,26 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 
   };
 
-  $scope.$on('$ionicView.enter', populateList("")
-);
+$scope.$on('$ionicView.enter', function() {
+  $scope.words = [];
+  Button.setWords();
+  theWords = Button.words;
+  for(var i = 0; i < theWords.length; i++){
+    var keyMaps = Utility.setPianoKeys(i);
+      var jsonWord = {
+        "word" : theWords[i],
+        "id": 'button_' + i.toString(),
+        "ng-click": "",
+        "first_key_class": keyMaps[0] ? Config.wordButtons : Config.columnButtons,
+        "second_key_class": keyMaps[1] ? Config.wordButtons : Config.columnButtons,
+        "third_key_class": keyMaps[2] ? Config.wordButtons : Config.columnButtons,
+        "fourth_key_class": keyMaps[3] ? Config.wordButtons : Config.columnButtons,
+        "fifth_key_class": keyMaps[4] ? Config.wordButtons : Config.columnButtons
+      };
+      $scope.words.push(jsonWord);
+  }
+
+});
 
 $scope.filterList = function(event){
   var str = event.target.value;

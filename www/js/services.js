@@ -38,6 +38,7 @@ angular.module('articulate.services', [])
         if (typeof this[propertyName] != 'function') {
           if (window.localStorage[propertyName] != undefined) {
             this[propertyName] = window.localStorage[propertyName];
+            console.log(this[propertyName])
           }
         }
       }
@@ -256,6 +257,7 @@ angular.module('articulate.services', [])
       Config.currentWordCounts = topWordsDictionary;
       return topWordsDictionary;
     },
+
     incrementWord: function(word) {
       var json = Config.currentWordCounts;
       if(json === undefined){
