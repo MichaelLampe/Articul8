@@ -178,6 +178,19 @@
   font-weight: bold;
 }
 
+.piano_key{
+  min-width: 3vw;
+  min-height: 3vh;
+  float:left;
+}
+
+.piano_key_highlighted{
+  background: black;
+}
+
+.piano_key_nonhighlighted{
+  background: teal;
+}
 
 .scroll {
   height:100%;

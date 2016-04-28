@@ -1,30 +1,27 @@
-<ion-view view-title="Dashboard">
-  <ion-content class="padding">
-        <div id="word_labels" class="hidden-word-labels">
-          <div id="word_label_0" class="word-label"></div>
-          <div id="word_label_1" class="word-label"></div>
-          <div id="word_label_2" class="word-label"></div>
-          <div id="word_label_3" class="word-label"></div>
-          <div id="word_label_4" class="word-label"></div>
-          <div id="word_label_5" class="word-label"></div>
-          <div id="word_label_6" class="word-label"></div>
-          <div id="word_label_7" class="word-label"></div>
-        </div>
-
-        <div id="l_button_container" class="button_container" >
-          <button id="column_button_0" class="left-margin button" onclick="displayWordsColumn(0)"></button>
-        </div>
-        <div id="ml_button_container" class="button_container">
-          <button id="column_button_1" class="left-margin button" onclick="displayWordsColumn(1)"></button>
-        </div>
-        <div id="mr_button_container" class="button_container">
-          <button id="column_button_2" class="left-margin button" onclick="displayWordsColumn(2)"></button>
-        </div>
-        <div id="r_button_container" class="button_container">
-          <button id="column_button_3" class="left-margin button" onclick="displayWordsColumn(3)"></button>
-          <div>
-            <button class="key button button-assertive" disabled></button>
+<ion-view view-title="Key Mappings">
+  <ion-content>
+    <ion-list>
+      <div class="bar bar-header item-input-inset" style="padding: 5vw;">
+        <label class="item-input-wrapper">
+          <i class="icon ion-ios-search placeholder-icon"></i>
+          <input type="search" placeholder="Search" ng-keyUp="filterList($event)">
+        </label>
+      </div>
+      <div class="list">
+        <ion-item class="card list-inset" ng-repeat="word in words">
+          <div class="item">
+            <h2 class="piano_key_word" id="head_{{word.id}}">{{word.word}}</h2>
+            <div class="piano_key_container"  ng-click="showPopup($event)" value="{{word.word}}" id="{{word.id}}">
+              <button class="button {{word.first_key_class}}" disabled></button>
+              <button class="button {{word.second_key_class}}" disabled></button>
+              <button class="button {{word.third_key_class}}" disabled></button>
+              <button class="button {{word.fourth_key_class}}" disabled></button>
+              <button class="button {{word.fifth_key_class}}" disabled></button>
+            </div>
           </div>
         </div>
-      </ion-content>
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>
 </ion-view>

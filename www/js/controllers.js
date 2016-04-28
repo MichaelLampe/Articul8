@@ -23,7 +23,7 @@ sayString = function(word, WordStats) {
     }
   }
   if(WordStats != undefined){
-    WordStats.incrementWord(word);
+    //WordStats.incrementWord(word);
   }
 };
 
@@ -42,7 +42,7 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 
   toggle_buttons = [["Toggle Voice", "toggleVoice"]];
 
-  settings_list = [["Word Button Style", "wordButtons"], ["Column Button Style", "columnButtons"]];
+  settings_list = [["Non-Selected Key Style", "wordButtons"], ["Selected Key Style", "columnButtons"]];
 
   $scope.settings = [];
   for (var i = 0; i < settings_list.length; i++){
@@ -73,10 +73,6 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
   $scope.changeButtonStyle = function(config_name, button_style) {
     // Save to local storage
     Config.saveSettingToLocalStorage(config_name, button_style);
-
-    //Update the buttons to reflect the changes
-    Button.updateButtonClass();
-    Button.updateColumnButton();
   };
 
   $scope.toggleValue = function(button_name) {
@@ -141,60 +137,94 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 })
 
 
-.controller('DashCtrl',function($scope, $ionicPopup, Button, Config, WordStats) {
-  Config.loadSettings();
-  // Setup
-  Button.setup($scope);
+.controller('DashCtrl',function($scope, $ionicPopup, Button, Config, WordStats, Utility) {
 
-  /*
-  Handler for collapsing columns
-  */
-  displayWordsColumn = function(column_to_keep){
-    Button.showWordColumn(column_to_keep);
+  var populateList = function(str) {
+    $scope.words = [];
+
+    Button.setWords();
+    theWords = Button.words;
+    for(var i = 0; i < theWords.length; i++){
+      var keyMaps = Utility.setPianoKeys(i);
+      if(theWords[i].substring(0, str.length) === str){
+        var jsonWord = {
+          "word" : theWords[i],
+          "id": 'button_' + i.toString(),
+          "ng-click": "",
+          "first_key_class": keyMaps[0] ? Config.wordButtons : Config.columnButtons,
+          "second_key_class": keyMaps[1] ? Config.wordButtons : Config.columnButtons,
+          "third_key_class": keyMaps[2] ? Config.wordButtons : Config.columnButtons,
+          "fourth_key_class": keyMaps[3] ? Config.wordButtons : Config.columnButtons,
+          "fifth_key_class": keyMaps[4] ? Config.wordButtons : Config.columnButtons
+        };
+        $scope.words.push(jsonWord);
+      }
+    }
+
   };
 
-  // Popup handler for updating words.
-  $scope.showPopup = function ($event) {
-    // Keep scope
-    $scope.data = {};
-    // Log these for later use when we reassign word in word array
-    $scope.data.current_button_index = $event.currentTarget.id.replace("button_", "");
-    $scope.data.current_button = $event.currentTarget;
+  $scope.$on('$ionicView.enter', populateList("")
+);
 
-    var myPopup = $ionicPopup.show({
-      template: '<input ng-model="data.new_word" type="text" placeholder="New Word">',
-      title: 'Change Button Words',
-      subTitle: 'Current word: ' + $event.currentTarget.value,
-      scope: $scope,
-      buttons: [
-        {
-          text: '<b>Finished</b>',
-          onTap: function (e) {
-            return $scope;
-          }
+$scope.filterList = function(event){
+  var str = event.target.value;
+  console.log(str)
+  populateList(str);
+};
+
+
+
+
+// Popup handler for updating words.
+$scope.showPopup = function (event) {
+
+  console.log(event.target)
+  console.log(event.target.getAttribute("value"))
+  console.log(event.target.id)
+
+  // Keep scope
+  $scope.data = {};
+
+  // Log these for later use when we reassign word in word array
+  $scope.data.current_button_index = event.target.id.replace("button_", "");
+  $scope.data.current_button = event.target;
+
+  var myPopup = $ionicPopup.show({
+    template: '<input ng-model="data.new_word" type="text" placeholder="New Word">',
+    title: 'Change Button Words',
+    subTitle: 'Current word: ' + event.target.getAttribute("value"),
+    scope: $scope,
+    buttons: [
+      {
+        text: '<b>Finished</b>',
+        onTap: function (e) {
+          return $scope;
         }
-      ]
-    });
-
-    myPopup.then(function (res) {
-      // Check if there is an update
-      if (res.data.new_word) {
-        // Change word to new word and save to local storage for later use.
-        Button.words[res.data.current_button_index] = res.data.new_word;
-
-        // Update button value
-        res.data.current_button.setAttribute('value', Button.words[res.data.current_button_index]);
-        Button.saveWordsToLocalStorage(Button.words);
-        if (!Button.showingAllColumns) {
-          Button.updateWordLabels(Button.current_k);
-        }
-        sayString(res.data.new_word, WordStats);
-      } else {
-        // Log a cancellation.
-        console.log("No word supplied.")
       }
-    });
-  }
+    ]
+  });
+
+  myPopup.then(function (res) {
+    // Check if there is an update
+    if (res.data.new_word) {
+      // Change word to new word and save to local storage for later use.
+      Button.words[res.data.current_button_index] = res.data.new_word;
+
+      // Update button value
+      res.data.current_button.setAttribute('value', Button.words[res.data.current_button_index]);
+      document.getElementById("head_" + res.data.current_button.id).innerHTML = Button.words[res.data.current_button_index];
+      Button.saveWordsToLocalStorage(Button.words);
+      if (!Button.showingAllColumns) {
+        Button.updateWordLabels(Button.current_k);
+      }
+      sayString(res.data.new_word, WordStats);
+    }
+    else {
+      // Log a cancellation.
+      console.log("No word supplied.")
+    }
+  });
+}
 })
 
 .controller('WordStatsCtrl', function($scope, BLE, WordStats) {
@@ -206,12 +236,12 @@ angular.module('articulate.controllers', []).controller('SettingsCtrl', function
 
     // Create items array
     var items = Object.keys(wordsDict).map(function(key) {
-        return [key, wordsDict[key]];
+      return [key, wordsDict[key]];
     });
 
     // Sort the array based on the second element
     items.sort(function(first, second) {
-        return second[1] - first[1];
+      return second[1] - first[1];
     });
 
     // Create a new array with only the first 5 items
